@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIFFERENT IDEA | Cognitive Adaptive Learning</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Control Sidebar -->
+    <nav class="control-panel">
+        <div class="logo">DIFFERENT IDEA</div>
+        <p class="tagline">Adaptive Learning Interface v2.0</p>
+
+        <!-- Dynamic Cognitive Analysis -->
+        <div class="control-group analysis-box" id="analysis-box">
+            <h3>🧠 Cognitive Analysis</h3>
+            <div id="analysis-results" class="analysis-results">
+                <p class="placeholder-text">Paste text to begin analysis...</p>
+            </div>
+            <div id="recommendation-banner" class="recommendation-banner hidden">
+                <strong>Recommendation:</strong>
+                <span id="rec-text"></span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Profile Selection</h3>
+            <div class="btn-group">
+                <button onclick="setMode('default')" class="btn btn-outline" id="btn-default">Standard</button>
+                <button onclick="setMode('dyslexia')" class="btn btn-outline" id="btn-dyslexia">Dyslexia Friendly</button>
+                <button onclick="setMode('adhd')" class="btn btn-outline" id="btn-adhd">ADHD Focus</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Reading Tools</h3>
+            <label class="toggle-label">
+                <span>Bionic Reading</span>
+                <input type="checkbox" id="toggle-bionic" onchange="toggleBionic(this.checked)">
+                <span class="slider"></span>
+            </label>
+            <label class="toggle-label">
+                <span>Focus Mask</span>
+                <input type="checkbox" id="toggle-focus" onchange="toggleFocusMask(this.checked)">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="control-group distress-section">
+            <button class="btn btn-distress" onclick="triggerBreak()">
+                😓 I'm overwhelmed
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="content-area" id="content-area">
+        
+        <!-- Focus Mask Overlay -->
+        <div class="focus-mask" id="focus-mask"></div>
+
+        <!-- STEP 1: INPUT VIEW -->
+        <section class="input-view" id="input-view">
+            <h1>Transform Your Content</h1>
+            <p>Paste any educational text below. Our engine will analyze complexity and adapt the interface for optimal learning.</p>
+            
+            <textarea id="user-input" placeholder="Paste text here... (e.g., an article about Photosynthesis)"></textarea>
+            
+            <div class="input-actions">
+                <button class="btn btn-primary" onclick="processText()">Adapt & Transform</button>
+            </div>
+        </section>
+
+        <!-- STEP 2: READING VIEW (Initially Hidden) -->
+        <article class="article-container hidden" id="article-container">
+            <header>
+                <button class="btn-back" onclick="goBack()">← New Text</button>
+                <h1 id="article-title">Processed Content</h1>
+                <div class="meta-bar">
+                    <span class="tag" id="meta-complexity">Analyzing...</span>
+                    <span class="reading-time" id="meta-time">0 min read</span>
+                </div>
+            </header>
+
+            <!-- Dynamic Content Blocks -->
+            <section class="content-block" id="content-academic"></section>
+            <section class="content-block hidden" id="content-simplified"></section>
+
+            <!-- Visual Aid -->
+            <aside class="visual-summary" id="visual-summary">
+                <div class="card">
+                    <div class="icon">💡</div>
+                    <div class="text">Key Concepts extracted dynamically</div>
+                </div>
+            </aside>
+        </article>
+    </main>
+
+    <!-- Distress Modal -->
+    <div class="modal-overlay hidden" id="distress-modal">
+        <div class="modal-content">
+            <h2>Let's take a breath.</h2>
+            <p>Focus on the circle.</p>
+            <div class="breathing-circle"></div>
+            <button class="btn btn-primary" onclick="closeBreak()">I'm ready</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
