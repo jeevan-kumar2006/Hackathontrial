@@ -1,3 +1,6 @@
+// Add this constant at the top of script.js
+const API_URL = "http://127.0.0.1:5000";
+
 // State Management
 const state = {
     mode: 'default',
@@ -19,27 +22,48 @@ const recText = document.getElementById('rec-text');
 // --- Core Logic ---
 
 // 1. Process Input
-function processText() {
+
+// Replace the existing processText function with this one
+async function processText() {
     const rawText = document.getElementById('user-input').value.trim();
     if (!rawText) return alert("Please enter some text first!");
 
-    // Analyze Text
-    const analysis = analyzeText(rawText);
-    updateAnalysisUI(analysis);
-    
-    // Generate Content
-    renderContent(rawText);
-    
-    // Auto-Recommend Mode based on Logic
-    autoRecommend(analysis);
+    const analysisResults = document.getElementById('analysis-results');
+    analysisResults.innerHTML = '<p>Analyzing via Python Backend...</p>';
 
-    // Switch Views
-    inputView.classList.add('hidden');
-    articleContainer.classList.remove('hidden');
-    
-    // Update Meta
-    document.getElementById('meta-time').innerText = Math.ceil(rawText.split(' ').length / 200) + " min read";
-    document.getElementById('meta-complexity').innerText = analysis.complexityLevel;
+    try {
+        // 1. Analyze Text
+        const analyzeRes = await fetch(`${API_URL}/api/analyze`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: rawText })
+        });
+        const analysisData = await analyzeRes.json();
+
+        // 2. Simplify Text
+        const simplifyRes = await fetch(`${API_URL}/api/simplify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: rawText })
+        });
+        const simplifyData = await simplifyRes.json();
+
+        // 3. Update UI
+        updateAnalysisUI(analysisData);
+        renderContent(rawText, simplifyData.summary);
+        autoRecommend(analysisData);
+
+        // Switch Views
+        inputView.classList.add('hidden');
+        articleContainer.classList.remove('hidden');
+        
+        document.getElementById('meta-time').innerText = Math.ceil(analysisData.wordCount / 200) + " min read";
+        document.getElementById('meta-complexity').innerText = analysisData.complexity;
+
+    } catch (error) {
+        console.error("Backend connection failed", error);
+        alert("Error connecting to Python Backend. Ensure app.py is running.");
+    }
 }
 
 // 2. Cognitive Analyzer (The "Intelligence")
