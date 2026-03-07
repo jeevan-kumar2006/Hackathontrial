@@ -79,14 +79,48 @@
         </div>
     </div>
 
-    <script>
-        // Simple Frontend Handler for Demo
-        function handleLogin(e) {
+       <script>
+        const loginForm = document.getElementById('login-form');
+        const API_URL = "http://127.0.0.1:5000";
+
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            // In a real app, you would validate credentials here.
-            // For the prototype, we will just redirect to the main app.
-            alert("Login Successful! Redirecting to Dashboard...");
-            window.location.href = "index.html";
+            
+            const username = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Save user session temporarily
+                    localStorage.setItem('currentUser', data.user);
+                    alert("Login Successful!");
+                    window.location.href = "index.html";
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Cannot connect to server. Is app.py running?");
+            }
+        });
+
+        // Helper for signup (trigger this if you add a signup button)
+        async function handleSignup(username, password) {
+             const response = await fetch(`${API_URL}/api/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            alert(data.message);
         }
     </script>
 </body>
